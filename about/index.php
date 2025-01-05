@@ -43,7 +43,7 @@
           <div class="col-12">
             <h2>Contact Us</h2>
             <p>If you have any questions or need assistance, please do not hesitate to reach out to us. Our dedicated team is here to help you with any needs you may have regarding plot reservations, payment inquiries, or general information about our services.</p>
-            <p><a href="../contact/" class="btn btn-primary">Contact Us</a></p>
+            <p><a href="../contact/" class="btn btn-success">Contact Us</a></p>
           </div>
         </div>
         

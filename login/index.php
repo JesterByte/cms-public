@@ -41,7 +41,7 @@
 
           <!-- Options for users -->
           <div class="text-center mt-3">
-            <a href="forgot-password.php">Forgot your password?</a>
+            <a href="../forgot-password/">Forgot your password?</a>
           </div>
           <div class="text-center mt-2">
             <p>No account yet? <a href="../signup/">Sign up here</a></p>
@@ -52,26 +52,6 @@
 
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-      // Example starter JavaScript for disabling form submissions if there are invalid fields
-      (() => {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-          form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-              event.preventDefault()
-              event.stopPropagation()
-            }
-
-            form.classList.add('was-validated')
-          }, false)
-        })
-      })()
-    </script>
+    <script src="form-validation.js"></script>
   </body>
 </html>

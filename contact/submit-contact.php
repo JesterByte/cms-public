@@ -1,6 +1,6 @@
 <?php
-include_once "../../database-connection.php";
-include_once "../../sanitation.php";
+include_once "../database-connection.php";
+include_once "../sanitation.php";
 
 if (isset($_POST["submit_button"]) && $_SERVER["REQUEST_METHOD"] === "POST") {
     $fullName = sanitizeName($_POST["name"]);
