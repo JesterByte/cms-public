@@ -11,8 +11,9 @@
 <html lang="en" data-bs-theme="auto">
   <head>
     <?php 
-        $pageTitle = "Dashboard";
-        include_once "../components/dashboard-head.php";   
+      $pageTitle = "Balances";
+      include_once "../components/dashboard-head.php";   
+      include_once "../components/datatable-cdn-css.html"; 
     ?>
   </head>
   <body>
@@ -41,15 +42,41 @@
             </div> -->
           </div>
 
+        <!-- DataTable -->
+        <div class="table-responsive rounded shadow">
+            <table id="myReservationsTable" class="table table-striped table-hover table-bordered text-center" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Lot ID</th>
+                  <th>Lot Type</th>
+                  <th>Payment Plan</th>
+                  <th>Total Price</th>
+                  <th>Paid Amount</th>
+                  <th>Outstanding Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+
         </main>
       </div>
     </div>
 
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <?php include_once "../components/datatable-cdn-js.html"; ?>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/modal-autofocus.js"></script>
+    <script src="../assets/js/initialize-datatable.js"></script>
+
     <?php include_once "../components/modals/modal-sign-out.html"; ?>
+
+    <script>
+      $(document).ready(function() {
+        initializeDataTable("#myReservationsTable")
+      });
+    </script>
 
   </body>
 </html>

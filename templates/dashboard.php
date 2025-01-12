@@ -2,7 +2,7 @@
   session_start();
   require_once "../utils/helpers.php";
 
-  if (!isset($_SESSION["customer_id"])) {
+  if (!isset($_SESSION["user_id"])) {
     serverRedirect("../");
   }
 ?>
@@ -11,8 +11,8 @@
 <html lang="en" data-bs-theme="auto">
   <head>
     <?php 
-        $pageTitle = "Dashboard";
-        include_once "../components/dashboard-head.php";   
+      $pageTitle = "";
+      include_once "../components/dashboard-head.php";   
     ?>
   </head>
   <body>
@@ -45,10 +45,11 @@
       </div>
     </div>
 
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <?php include_once "../components/datatable-cdn-js.html"; ?>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/modal-autofocus.js"></script>
+
     <?php include_once "../components/modals/modal-sign-out.html"; ?>
 
   </body>

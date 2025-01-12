@@ -1,0 +1,21 @@
+<!-- Lot Reservation Modal -->
+<div class="modal fade" id="lotReservationModal" tabindex="-1" aria-labelledby="lotReservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-3 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lotReservationModalLabel">Confirm Lot Reservation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="mb-0">Are you sure you want to reserve this lot?</p>
+            </div>
+            <form id="lotReservationForm" action="../process/process-reservation-lot.php" method="POST">
+                <div class="modal-footer">
+                    <input type="hidden" name="grave_id" id="lotId">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" name="reserve_lot" class="btn btn-primary">Yes, Reserve</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
