@@ -18,34 +18,14 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <form action="../process/process-payment-option.php" method="post">
+          <input type="hidden" name="reservation_id" value="<?= $encryptedReservationId ?>">
           <input type="hidden" name="payment_option" id="inputPaymentOption" value="">
-          <button type="submit" class="btn btn-primary" name="confirm_payment_option">Confirm</button>
+          <button type="submit" class="btn btn-primary" id="confirmPaymentOption" name="confirm_payment_option">Confirm</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-<!-- <script>
-  document.querySelectorAll('.payment-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const paymentOption = this.getAttribute('data-payment-option');
-      const amountPayable = this.getAttribute('data-amount-payable');
-
-      // Populate modal content
-      document.getElementById('chosenPaymentOption').textContent = paymentOption;
-      document.getElementById('amountPayable').textContent = amountPayable;
-
-      // Show modal
-      new bootstrap.Modal(document.getElementById('paymentOptionModal')).show();
-    });
-  });
-
-  document.getElementById('confirmPaymentBtn').addEventListener('click', () => {
-    alert('Payment confirmed!');
-    // Add backend processing or navigation logic here
-  });
-</script> -->
 
 <script>
   document.querySelectorAll('.payment-btn').forEach(button => {
@@ -57,7 +37,7 @@
       // Populate modal content
       document.getElementById('chosenPaymentOption').textContent = paymentOption;
       document.getElementById('amountPayable').textContent = amountPayable;
-      document.getElementById("inputPaymentOption").value =paymentOption;
+      document.getElementById("inputPaymentOption").value = paymentOption;
 
       // Add down payment information if "Installment" is in the payment option
       const modalBody = document.querySelector('#paymentOptionModal .modal-body');
@@ -82,9 +62,16 @@
       }
 
       // Show modal
-      new bootstrap.Modal(document.getElementById('paymentOptionModal')).show();
+      // new bootstrap.Modal(document.getElementById('paymentOptionModal')).show();
     });
   });
+
+      // Event listener to handle modal dismissal
+      document.getElementById("paymentOptionModal").addEventListener('hidden.bs.modal', () => {
+        // Remove focus from all elements within the modal
+        const focusableElements = document.getElementById("paymentOptionModal").querySelectorAll('input, button, textarea, a, select');
+        focusableElements.forEach(element => element.blur());
+      });
 
   // document.getElementById('confirmPaymentBtn').addEventListener('click', () => {
   //   alert('Payment confirmed!');

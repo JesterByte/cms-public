@@ -17,27 +17,29 @@
       } else {
         rowData($myReservationsRow["lot_type"]);
       }
-      rowData($myReservationsRow["lot_price"]);
-      if ($myReservationsRow["lot_type"] == "Pending" && $myReservationsRow["lot_price"] == "₱0.00") {
-        rowDataBadge("info", $myReservationsRow["payment_option"]);
-      } else {
+      rowData($myReservationsRow["total_purchase_price"]);
+      rowData($myReservationsRow["total_balance"]);
+      rowData($myReservationsRow["down_payment"]);  
+      rowData($myReservationsRow["monthly_payment"]);
+      if ($myReservationsRow["reservation_status"] == "Verified") {
         rowLink("btn-primary", '<i class="bi bi-list-ol"></i>', 'Choose', "../payment-options/?data=" . $myReservationsRow["payment_options_url"]);
+      } else {
+        rowData( $myReservationsRow["payment_option"]);
       }
       if ($myReservationsRow["reservation_status"] == "Pending") {
         rowDataBadge("info", $myReservationsRow["reservation_status"]);
       } else {
         rowDataBadge("success", $myReservationsRow["reservation_status"]);
       }
-      if ($myReservationsRow["reservation_status"] == "Pending") {
-        rowDataBadge("info", $myReservationsRow["reservation_status"]);
+      if ($myReservationsRow["total_purchase_price"] == "₱0.00") {
+        rowDataBadge("info", "Pending");
       } else {
-        rowButton("btn-primary", "", "Button");
+        $buttonText = $myReservationsRow["monthly_payment"] != null && str_contains($myReservationsRow["payment_option"], "Installment") ? "Pay " . $myReservationsRow["monthly_payment"] : "Pay";
+        rowButton("btn-primary", '<i class="bi bi-credit-card-fill"></i>', $buttonText);
       }
       endRow();  
     }
   }
-
-
 ?>
 
 <!doctype html>
@@ -73,6 +75,12 @@
                 This week
               </button>
             </div> -->
+            <div class="btn-group">
+              <a href="#" class="btn btn-primary active" aria-current="page">Pending</a>
+              <a href="#" class="btn btn-primary">Cash Sale</a>
+              <a href="#" class="btn btn-primary">6 Months</a>
+              <a href="#" class="btn btn-primary">Installment</a>
+            </div>
           </div>
 
         <!-- DataTable -->
@@ -83,7 +91,10 @@
                   <th>Date of Reservation</th>
                   <th>Reserved Lot</th>
                   <th>Lot Type</th>
-                  <th>Lot Price</th>
+                  <th>Total Purchase Price</th>
+                  <th>Total Balance</th>
+                  <th>Down Payment</th>
+                  <th>Monthly Payment</th>
                   <th>Payment Option</th>
                   <th>Reservation Status</th>
                   <th>Action</th>
@@ -103,9 +114,21 @@
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
     <?php include_once "../components/datatable-cdn-js.html"; ?>
     <script src="../assets/js/initialize-datatable.js"></script>
+    <script src="../assets/js/bootstrap-toast.js"></script>
 
 
     <?php include_once "../components/modals/modal-sign-out.html"; ?>
+
+    <script>
+      $(document).ready(function() {
+        const paymentOptionUpdated = <?= jsonSession("payment_option_updated") ?>
+
+        if (paymentOptionUpdated === true) {
+          showToast("Your payment option has been successfully set. Thank you for your patience!", "Payment Option Updated");
+          unsetToast();
+        }
+      });
+    </script>
 
     <script>
       $(document).ready(function() {

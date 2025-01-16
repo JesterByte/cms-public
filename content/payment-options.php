@@ -14,6 +14,7 @@ if (isset($_GET["data"])) {
         serverRedirect("../my-reservations/");
     }
     $reservationId = $parameters["reservation_id"];
+    $encryptedReservationId = encrypt($reservationId, SECRET_KEY);
 
     $paymentOptionsRow = selectPaymentOptions($connection, $reservationId);
 }
