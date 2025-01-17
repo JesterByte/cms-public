@@ -7,7 +7,7 @@ autoloadUtils(__DIR__ . "/../utils");
 
 if (isSubmitAndPost("reserve_lot")) {
     $graveId = $_POST["grave_id"];
-    if (!validateGraveId($graveId)) {
+    if (!validateLotId($graveId)) {
         echo "Invalid grave ID format.";
         exit;
     }
@@ -16,7 +16,7 @@ if (isSubmitAndPost("reserve_lot")) {
 }
 
 function insertLotReservation($connection, $graveId, $customerId) {
-    $insertLotReservation = mysqli_prepare($connection, "INSERT INTO lot_reservations(reserver_id, reserved_lot) VALUES(?, ?)");
+    $insertLotReservation = mysqli_prepare($connection, "INSERT INTO lot_reservations(reservee_id, reserved_lot) VALUES(?, ?)");
     mysqli_stmt_bind_param($insertLotReservation, "is", $customerId, $graveId);
     if (mysqli_stmt_execute($insertLotReservation)) {
         $updateCemeteryGraves = mysqli_prepare($connection, "UPDATE cemetery_graves SET status = ? WHERE grave_id = ?");
