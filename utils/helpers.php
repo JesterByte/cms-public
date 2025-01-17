@@ -86,6 +86,10 @@ function rowData($rowData) {
   echo "<td>" . escapeOutput($rowData) . "</td>";
 }
 
+function rowButtonTriggerModal($color = "", $modalId = "", $buttonIcon = "", $buttonText = "") {
+  echo '<td><button type="button" class="btn ' . $color . '" data-bs-toggle="modal" data-bs-target="' . $modalId . '">' . $buttonIcon . ' ' . $buttonText . '</button></td>';
+}
+
 function rowButton($color = "", $icon = "", $textContent) {
     echo '<td><button type="button" class="btn ' . $color . '">' . $icon  . ' ' . escapeOutput($textContent) . '</button></td>';
 }
@@ -136,4 +140,8 @@ function extractPhaseNumber($lotId) {
 
 function jsAlert($message) {
   echo "<script>alert('$message');</script>";
+}
+
+function jsonSession($sessionKey) {
+  echo json_encode(isset($_SESSION[$sessionKey]) &&  $_SESSION[$sessionKey] === true ? $_SESSION[$sessionKey] : false);
 }

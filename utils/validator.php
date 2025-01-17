@@ -21,3 +21,7 @@ function validateLotType($lotType) {
 function validateTimestamp($timestamp, $expiration) {
     return (time() - $timestamp) > $expiration;
 }
+
+function validatePaymentOption($paymentOption) {
+    return in_array($paymentOption, ["Cash Sale: 10% Discount", "6 Months: 5% Discount", "Installment: 1 Year (0% Interest)", "Installment: 2 Years (10% Interest)", "Installment: 3 Years (15% Interest)", "Installment: 4 Years (20% Interest)", "Installment: 5 Years (25% Interest)", "Pending"]);
+}

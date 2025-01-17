@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2025 at 04:14 PM
+-- Generation Time: Jan 16, 2025 at 01:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -680,8 +680,11 @@ CREATE TABLE `lot_reservations` (
   `reservee_id` int(11) NOT NULL,
   `reserved_lot` varchar(255) NOT NULL,
   `lot_type` enum('Supreme','Special','Standard','Pending') NOT NULL DEFAULT 'Pending',
-  `lot_price` decimal(10,2) NOT NULL,
-  `payment_option` enum('Cash Sale: 10% Discount','6 Months: 5% Discount','Installment: 1 Year','Installment: 2 Years','Installment: 3 Years','Installment: 4 Years','Installment: 5 Years','Pending') NOT NULL DEFAULT 'Pending',
+  `total_purchase_price` decimal(10,2) NOT NULL,
+  `down_payment` decimal(10,2) DEFAULT NULL,
+  `monthly_payment` decimal(10,2) DEFAULT NULL,
+  `total_balance` decimal(10,2) NOT NULL,
+  `payment_option` enum('Cash Sale: 10% Discount','6 Months: 5% Discount','Installment: 1 Year (0% Interest)','Installment: 2 Years (10% Interest)','Installment: 3 Years (15% Interest)','Installment: 4 Years (20% Interest)','Installment: 5 Years (25% Interest)','Pending') NOT NULL DEFAULT 'Pending',
   `reservation_status` enum('Pending','Verified','Active','Completed') NOT NULL DEFAULT 'Pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -691,9 +694,9 @@ CREATE TABLE `lot_reservations` (
 -- Dumping data for table `lot_reservations`
 --
 
-INSERT INTO `lot_reservations` (`id`, `reservee_id`, `reserved_lot`, `lot_type`, `lot_price`, `payment_option`, `reservation_status`, `created_at`, `updated_at`) VALUES
-(1, 1, 'P1-C29G3', 'Pending', 0.00, 'Pending', 'Pending', '2025-01-10 04:59:30', '2025-01-10 04:59:30'),
-(2, 1, 'P1-C1G1', 'Supreme', 0.00, 'Pending', 'Active', '2025-01-10 10:47:27', '2025-01-11 04:04:22');
+INSERT INTO `lot_reservations` (`id`, `reservee_id`, `reserved_lot`, `lot_type`, `total_purchase_price`, `down_payment`, `monthly_payment`, `total_balance`, `payment_option`, `reservation_status`, `created_at`, `updated_at`) VALUES
+(1, 1, 'P1-C29G3', 'Pending', 0.00, NULL, NULL, 0.00, 'Pending', 'Pending', '2025-01-10 04:59:30', '2025-01-10 04:59:30'),
+(2, 1, 'P1-C1G1', 'Supreme', 84342.24, 24868.45, 1486.84, 71368.55, 'Installment: 4 Years (20% Interest)', 'Active', '2025-01-10 10:47:27', '2025-01-14 14:09:47');
 
 -- --------------------------------------------------------
 

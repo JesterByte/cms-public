@@ -130,10 +130,10 @@
 
                         if ($duration == 1) {
                           $durationYears = "$duration Year";
-                          $paymentOption = "Installment: $duration Year";
+                          $paymentOption = "Installment: $duration Year (" . ($interest * 100) . "% Interest)";
                         } else {
                           $durationYears = "$duration Years";
-                          $paymentOption = "Installment: $duration Years";
+                          $paymentOption = "Installment: $duration Years (" . ($interest * 100) . "% Interest)";
                         }
                         
                         echo "<tr>
