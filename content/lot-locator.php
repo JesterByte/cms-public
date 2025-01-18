@@ -2,19 +2,19 @@
 header('Content-Type: application/json');
 include_once "../config/database.php";
 
-// Fetch grave data
-$sql = "SELECT grave_id, latitude_start, longitude_start, latitude_end, longitude_end, status FROM cemetery_graves";
+// Fetch lot data
+$sql = "SELECT lot_id, latitude_start, longitude_start, latitude_end, longitude_end, status FROM cemetery_lots";
 $result = $connection->query($sql);
 
-$graves = [];
+$lots = [];
 if ($result->num_rows > 0) {
   while($row = $result->fetch_assoc()) {
-    $graves[] = $row;
+    $lots[] = $row;
   }
 }
 
 // Return the grave data as JSON
-echo json_encode($graves);
+echo json_encode($lots);
 
 $connection->close();
 ?>

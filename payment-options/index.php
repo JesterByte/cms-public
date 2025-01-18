@@ -7,18 +7,6 @@
   if (!isset($_SESSION["customer_id"])) {
     serverRedirect("../");
   }
-
-  // Sample data for demonstration
-  $phase = 1; // Replace with actual data from your backend
-  $column = 2; // Replace with actual data from your backend
-  $grave = 3; // Replace with actual data from your backend
-  $lotType = "Supreme"; // Replace with actual data
-  $numberOfLots = 2; // Replace with actual data
-  $basePrice = 50000; // Replace with actual data (price per lot)
-
-  $totalPrice = $numberOfLots * $basePrice * 1.12; // VAT + Miscellaneous fees assumed at 12%
-  $cashDiscount = $totalPrice * 0.10;
-  $sixMonthsDiscount = $totalPrice * 0.05;
 ?>
 
 <!doctype html>

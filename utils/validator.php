@@ -4,10 +4,10 @@ function isSubmitAndPost($submitButtonName) {
     return isset($_POST[$submitButtonName]) && $_SERVER["REQUEST_METHOD"] === "POST";
 }
 
-function validateLotId($graveId) {
-    $pattern = "/^P\d+-C\d+G\d+$/";
+function validateLotId($lotId) {
+    $pattern = "/^P\d+-C\d+L\d+$/";
 
-    if (preg_match($pattern, $graveId)) {
+    if (preg_match($pattern, $lotId)) {
         return true;
     } else {
         return false;
@@ -18,7 +18,7 @@ function validateLotType($lotType) {
     return in_array($lotType, ["Supreme", "Special", "Standard"]); // Np pending
 }
 
-function validateTimestamp($timestamp, $expiration) {
+function expiredTimestamp($timestamp, $expiration) {
     return (time() - $timestamp) > $expiration;
 }
 

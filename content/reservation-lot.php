@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 include_once "../config/database.php";
 
 // Fetch grave data
-$sql = "SELECT grave_id, latitude_start, longitude_start, latitude_end, longitude_end, status FROM cemetery_graves WHERE status = 'Available'";
+$sql = "SELECT lot_id, latitude_start, longitude_start, latitude_end, longitude_end, status FROM cemetery_lots WHERE status = 'Available'";
 $result = $connection->query($sql);
 
 $graves = [];

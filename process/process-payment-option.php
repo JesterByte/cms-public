@@ -89,7 +89,7 @@ function updatePaymentOption($connection, $reservationId, $paymentOption) {
 
     if (mysqli_stmt_execute($updatePaymentOption)) {
         $_SESSION["payment_option_updated"] = true;
-        serverRedirect("../my-reservations");
+        serverRedirect("../lot-reservations/?type=new");
     } else {
         echo "Database error";
     }

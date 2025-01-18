@@ -2,7 +2,7 @@
 define("SECRET_KEY", "123");
 
 // Encrypt function
-function encrypt($data, $key) {
+function encrypt($data, $key) { // encrypt() requires a timestamp
   $iv = openssl_random_pseudo_bytes(16); // Secure 16-byte IV
   $encryptedData = openssl_encrypt($data, 'AES-256-CBC', $key, 0, $iv);
   return base64_encode($iv . $encryptedData); // Concatenate IV and encrypted data
@@ -27,6 +27,14 @@ function isActivePage($pageTitle, $currentPage) {
 
 function isAriaCurrentPage($pageTitle, $currentPage) {
     return $pageTitle == $currentPage ? 'aria-current="page"' : "";
+}
+
+function isActivePageLink($type) {
+  return isset($_GET["type"]) && $_GET["type"] == $type ? "active" : "";
+}
+
+function isAriaCurrentPageLink($type) {
+  return isset($_GET["type"]) && $_GET["type"] == $type ? 'aria-current="page"' : "";
 }
 
 function serverRedirect($destination) {
@@ -64,11 +72,11 @@ function echoSessionToast($sessionKey) {
 
 function displayPhaseLocation($location) {
     // Use a regular expression to parse the input
-    if (preg_match('/^P(\d+)-C(\d+)G(\d+)$/', $location, $matches)) {
+    if (preg_match('/^P(\d+)-C(\d+)L(\d+)$/', $location, $matches)) {
       $phase = $matches[1];
       $column = $matches[2];
-      $grave = $matches[3];
-      return "Phase $phase, Column $column, Grave $grave";
+      $lot = $matches[3];
+      return "Phase $phase, Column $column, Lot $lot";
     } else {
       return "Invalid location format";
     }
@@ -76,6 +84,10 @@ function displayPhaseLocation($location) {
 
 function formatToPeso($amount) {
     return '₱' . number_format($amount, 2);
+}
+
+function tableHead($tableHead) {
+  echo "<th>" . $tableHead . "</th>";
 }
 
 function startRow() {
@@ -144,4 +156,17 @@ function jsAlert($message) {
 
 function jsonSession($sessionKey) {
   echo json_encode(isset($_SESSION[$sessionKey]) &&  $_SESSION[$sessionKey] === true ? $_SESSION[$sessionKey] : false);
+}
+
+function buttonBadge($number) {
+  if ($number <= 0) {
+    return "";
+  } else {
+    return '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+      ' . $number . '
+      <span class="visually-hidden">unread messages</span>
+    </span>';
+  }
+
+
 }

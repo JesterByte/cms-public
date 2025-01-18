@@ -11,7 +11,7 @@
 <html lang="en" data-bs-theme="auto">
   <head>
     <?php 
-      $pageTitle = "Plot Locator";
+      $pageTitle = "Lot Locator";
       include_once "../components/dashboard-head.php";   
     ?>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -102,20 +102,20 @@
                 maxZoom: 20
             }).addTo(map);
 
-            // Function to draw rectangles for graves
-            function drawGrave(grave) {
-                const graveWidth = 0.000009; // Approx. 1 meter in longitude degrees
-                const graveHeight = 0.000018; // Approx. 2 meters in latitude degrees
+            // Function to draw rectangles for lots
+            function drawLot(lot) {
+                const lotWidth = 0.000009; // Approx. 1 meter in longitude degrees
+                const lotHeight = 0.000018; // Approx. 2 meters in latitude degrees
 
-                // Calculate end latitude and longitude based on starting coordinates and grave size
-                var startLat = grave.latitude_start;
-                var startLng = grave.longitude_start;
-                var endLat = grave.latitude_end;
-                var endLng = grave.longitude_end;
+                // Calculate end latitude and longitude based on starting coordinates and lot size
+                var startLat = lot.latitude_start;
+                var startLng = lot.longitude_start;
+                var endLat = lot.latitude_end;
+                var endLng = lot.longitude_end;
 
-                // Determine the color based on grave status
+                // Determine the color based on lot status
                 let color;
-                switch (grave.status) {
+                switch (lot.status) {
                     case 'Available':
                         color = 'green';
                         break;
@@ -132,7 +132,7 @@
                         color = 'blue'; // Default color for unknown status
                 }
 
-                // Create a rectangle (polygon) for the grave lot
+                // Create a rectangle (polygon) for the lot lot
                 var rectangle = L.rectangle([[startLat, startLng], [endLat, endLng]], {
                     color: color,
                     weight: 1,
@@ -140,19 +140,19 @@
                 }).addTo(map);
 
                 // Add a popup to the rectangle showing the status
-                rectangle.bindPopup("<b>Status:</b> " + grave.status);
+                rectangle.bindPopup("<b>Status:</b> " + lot.status);
             }
 
-            // Fetch grave data from PHP file (using AJAX)
-            fetch('../content/plot-locator.php')
+            // Fetch lot data from PHP file (using AJAX)
+            fetch('../content/lot-locator.php')
                 .then(response => response.json())
                 .then(data => {
-                    // Iterate through graves and draw rectangles
-                    data.forEach(grave => {
-                        drawGrave(grave);
+                    // Iterate through lots and draw rectangles
+                    data.forEach(lot => {
+                        drawLot(lot);
                     });
                 })
-                .catch(error => console.error('Error fetching grave data:', error));
+                .catch(error => console.error('Error fetching lot data:', error));
 
             // Add legend to the map
             var legend = L.control({ position: 'bottomright' });

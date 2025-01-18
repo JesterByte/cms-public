@@ -2,17 +2,20 @@
 require_once "../config/database.php";
 require_once "../utils/helpers.php";
 
-$pendingReservationsTable = selectPendingReservations($connection, $_SESSION["customer_id"]);
+$newReservationsTable = selectNewReservations($connection, $_SESSION["customer_id"]);
+$cashSaleReservationsTable = selectCashSaleReservations($connection, $_SESSION["customer_id"]);
+$sixMonthsReservationsTable = selectSixMonthsReservations($connection, $_SESSION["customer_id"]);
+$installmentReservationsTable = selectInstallmentReservations($connection, $_SESSION["customer_id"]);
 
-function selectPendingReservations($connection, $reserveeId) {
-    $pendingReservationsTable = [];
-    $reservationStatus = "Pending";
-    $selectPendingReservations = mysqli_prepare($connection, "SELECT * FROM lot_reservations WHERE reservee_id = ? AND reservation_status = ?");
-    mysqli_stmt_bind_param($selectPendingReservations, "is", $reserveeId, $reservationStatus);
-    if (mysqli_stmt_execute($selectPendingReservations)) {
-        $selectPendingReservationsResult = mysqli_stmt_get_result($selectPendingReservations);
-        if (mysqli_num_rows($selectPendingReservationsResult) > 0) {
-            while ($myReservationRow = mysqli_fetch_assoc($selectPendingReservationsResult)) {
+function selectNewReservations($connection, $reserveeId) {
+    $newReservationsTable = [];
+    $reservationStatus = ["Pending", "Verified"];
+    $selectNewReservations = mysqli_prepare($connection, "SELECT * FROM lot_reservations WHERE reservee_id = ? AND (reservation_status = ? OR reservation_status = ?)");
+    mysqli_stmt_bind_param($selectNewReservations, "iss", $reserveeId, $reservationStatus[0], $reservationStatus[1]);
+    if (mysqli_stmt_execute($selectNewReservations)) {
+        $selectNewReservationsResult = mysqli_stmt_get_result($selectNewReservations);
+        if (mysqli_num_rows($selectNewReservationsResult) > 0) {
+            while ($myReservationRow = mysqli_fetch_assoc($selectNewReservationsResult)) {
                 $myReservationRow["formatted_reserved_lot"] = displayPhaseLocation($myReservationRow["reserved_lot"]); 
                 $myReservationRow["created_at"] = displayDateTime($myReservationRow["created_at"]);
                 $myReservationRow["total_purchase_price"] = formatToPeso($myReservationRow["total_purchase_price"]);
@@ -20,12 +23,12 @@ function selectPendingReservations($connection, $reserveeId) {
                 $myReservationRow["down_payment"] = $myReservationRow["down_payment"] != null ? formatToPeso($myReservationRow["down_payment"]) : "N/A";
                 $myReservationRow["monthly_payment"] = $myReservationRow["monthly_payment"] != null ? formatToPeso($myReservationRow["monthly_payment"]) : "N/A";
                 $myReservationRow["payment_options_url"] = encrypt("reservation_id=" . $myReservationRow["id"] . "&timestamp=" . time(), SECRET_KEY);
-                $pendingReservationsTable[] = array_map("escapeOutput", $myReservationRow);
+                $newReservationsTable[] = array_map("escapeOutput", $myReservationRow);
             }
         }
     }
 
-    return $pendingReservationsTable;
+    return $newReservationsTable;
 }
 
 function selectCashSaleReservations($connection, $reserveeId) {
@@ -41,11 +44,9 @@ function selectCashSaleReservations($connection, $reserveeId) {
                 $cashSaleReservationRow["formatted_reserved_lot"] = displayPhaseLocation($cashSaleReservationRow["reserved_lot"]);
                 $cashSaleReservationRow["created_at"] = displayDateTime($cashSaleReservationRow["created_at"]);
                 $cashSaleReservationRow["total_purchase_price"] = formatToPeso($cashSaleReservationRow["total_purchase_price"]);
-                $cashSaleReservationRow["total_balance"] = formatToPeso($cashSaleReservationRow["total_balance"]);                
+                $cashSaleReservationRow["total_balance"] = formatToPeso($cashSaleReservationRow["total_balance"]);    
+                $cashSaleReservationsTable[] = array_map("escapeOutput", $cashSaleReservationRow);            
             }
-        } else {
-            echo "No result";
-            exit;
         }
     }
      else {
@@ -69,11 +70,9 @@ function selectSixMonthsReservations($connection, $reserveeId) {
                 $sixMonthsReservationRow["formatted_reserved_lot"] = displayPhaseLocation($sixMonthsReservationRow["reserved_lot"]);
                 $sixMonthsReservationRow["created_at"] = displayDateTime($sixMonthsReservationRow["created_at"]);
                 $sixMonthsReservationRow["total_purchase_price"] = formatToPeso($sixMonthsReservationRow["total_purchase_price"]);
-                $sixMonthsReservationRow["total_balance"] = formatToPeso($sixMonthsReservationRow["total_balance"]);                
+                $sixMonthsReservationRow["total_balance"] = formatToPeso($sixMonthsReservationRow["total_balance"]);      
+                $sixMonthsReservationsTable[] = array_map("escapeOutput", $sixMonthsReservationRow);          
             }
-        } else {
-            echo "No result";
-            exit;
         }
     }
      else {
@@ -84,26 +83,24 @@ function selectSixMonthsReservations($connection, $reserveeId) {
     return $sixMonthsReservationsTable;
 }
 
-function installmentReservations($connection, $reserveeId) {
+function selectInstallmentReservations($connection, $reserveeId) {
     $installmentReservationsTable = [];
     $reservationStatus = "Active";
     $paymentOption = "Installment";
-    $installmentReservations = mysqli_prepare($connection, "SELECT * FROM lot_reservations WHERE reservee_id = ? AND payment_option LIKE CONCAT(?, '%') AND reservation_status = ?");
-    mysqli_stmt_bind_param($installmentReservations, "iss", $reserveeId, $paymentOption, $reservationStatus);
-    if (mysqli_stmt_execute($installmentReservations)) {
-        $installmentReservationsResult = mysqli_stmt_get_result($installmentReservations);
-        if (mysqli_num_rows($installmentReservationsResult) > 0) {
-            while ($installmentReservationRow = mysqli_fetch_assoc($installmentReservationsResult)) {
+    $selectInstallmentReservations = mysqli_prepare($connection, "SELECT * FROM lot_reservations WHERE reservee_id = ? AND payment_option LIKE CONCAT(?, '%') AND reservation_status = ?");
+    mysqli_stmt_bind_param($selectInstallmentReservations, "iss", $reserveeId, $paymentOption, $reservationStatus);
+    if (mysqli_stmt_execute($selectInstallmentReservations)) {
+        $selectInstallmentReservationsResult = mysqli_stmt_get_result($selectInstallmentReservations);
+        if (mysqli_num_rows($selectInstallmentReservationsResult) > 0) {
+            while ($installmentReservationRow = mysqli_fetch_assoc($selectInstallmentReservationsResult)) {
                 $installmentReservationRow["formatted_reserved_lot"] = displayPhaseLocation($installmentReservationRow["reserved_lot"]);
                 $installmentReservationRow["created_at"] = displayDateTime($installmentReservationRow["created_at"]);
                 $installmentReservationRow["total_purchase_price"] = formatToPeso($installmentReservationRow["total_purchase_price"]);
                 $installmentReservationRow["total_balance"] = formatToPeso($installmentReservationRow["total_balance"]);                
                 $installmentReservationRow["down_payment"] = formatToPeso($installmentReservationRow["down_payment"]);
                 $installmentReservationRow["monthly_payment"] = formatToPeso($installmentReservationRow["monthly_payment"]);
+                $installmentReservationsTable[] = array_map("escapeOutput", $installmentReservationRow);
             }
-        } else {
-            echo "No result";
-            exit;
         }
     }
      else {

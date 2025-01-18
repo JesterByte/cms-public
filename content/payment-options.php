@@ -10,8 +10,8 @@ if (isset($_GET["data"])) {
 
     parse_str($decryptedData, $parameters);
     $receivedTimestamp = $parameters["timestamp"];
-    if (validateTimestamp($receivedTimestamp, 300)) {
-        serverRedirect("../my-reservations/");
+    if (expiredTimestamp($receivedTimestamp, 300)) {
+        serverRedirect("../lot-reservations/?type=new");
     }
     $reservationId = $parameters["reservation_id"];
     $encryptedReservationId = encrypt($reservationId, SECRET_KEY);

@@ -11,7 +11,7 @@
 <html lang="en" data-bs-theme="auto">
   <head>
     <?php 
-      $pageTitle = "Burial Reservation";
+      $pageTitle = "Reserve a Burial";
       include_once "../components/dashboard-head.php";   
     ?>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />

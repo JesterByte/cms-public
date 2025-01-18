@@ -7,25 +7,25 @@
     <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
       <ul class="nav flex-column">
         <li class="nav-item">
-          <a class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Dashboard") ?>" aria-current="page" href="../dashboard/">
+          <a class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Dashboard") ?>" <?= isAriaCurrentPage($pageTitle, "Dashboard") ?> href="../dashboard/">
             <i class="bi bi-house<?= fillIcon($pageTitle, "Dashboard") ?>"></i> Dashboard
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Plot Locator") ?>" aria-current="page" href="../dashboard-plot-locator/">
-            <i class="bi bi-search"></i> Plot Locator
+          <a class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Lot Locator") ?>" <?= isAriaCurrentPage($pageTitle, "Lot Locator") ?> href="../dashboard-lot-locator/">
+            <i class="bi bi-search"></i> Lot Locator
           </a>
         </li>
-        <?php $reservationsList = ["My Reservations", "Lot Reservation", "Burial Reservation"]; ?>
+        <?php $reservationsList = ["Lot Reservations", "Reserve a Lot", "Reserve a Burial"]; ?>
         <li class="nav-item">
           <a class="nav-link d-flex align-items-center gap-2" data-bs-toggle="collapse" href="#reservationsSubmenu" role="button" aria-expanded="<?= isPageTitleInList($pageTitle, $reservationsList) ? "true" : "false"; ?>" aria-controls="reservationsSubmenu">
             <i class="bi bi-calendar-check<?= isPageTitleInList($pageTitle, $reservationsList) ? "-fill" : ""; ?>"></i> Reservation <i class="bi bi-caret-down<?= isPageTitleInList($pageTitle, $reservationsList) ? "-fill" : ""; ?>"></i>
           </a>
           <div class="collapse <?= isPageTitleInList($pageTitle, $reservationsList) ? "show" : ""; ?>" id="reservationsSubmenu">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="../my-reservations" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "My Reservations") ?>"><i class="bi bi-caret-right<?= fillIcon($pageTitle, "My Reservations") ?>"></i> My Reservations</a></li>
-              <li><a href="../reservation-lot" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Lot Reservation") ?>"><i class="bi bi-caret-right<?= fillIcon($pageTitle, "Lot Reservation") ?>"></i> Lot Reservation</a></li>
-              <li><a href="../reservation-burial" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Burial Reservation") ?>"><i class="bi bi-caret-right<?= fillIcon($pageTitle, "Burial Reservation") ?>"></i> Burial Reservation</a></li>
+                <li><a href="../lot-reservations/?type=new" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Lot Reservations") ?>" <?= isAriaCurrentPage($pageTitle, "Lot Reservations") ?>><i class="bi bi-caret-right<?= fillIcon($pageTitle, "Lot Reservations") ?>"></i> Lot Reservations</a></li>
+              <li><a href="../reservation-lot" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Reserve a Lot") ?>" <?= isAriaCurrentPage($pageTitle, "Reserve a Lot") ?>><i class="bi bi-caret-right<?= fillIcon($pageTitle, "Reserve a Lot") ?>"></i> Reserve a Lot</a></li>
+              <li><a href="../reservation-burial" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Reserve a Burial") ?>" <?= isAriaCurrentPage($pageTitle, "Reserve a Burial") ?>><i class="bi bi-caret-right<?= fillIcon($pageTitle, "Reserve a Burial") ?>"></i> Reserve a Burial</a></li>
             </ul>
           </div>
         </li>
@@ -36,8 +36,8 @@
           </a>
           <div class="collapse <?= isPageTitleInList($pageTitle, $myFinancesList) ? "show" : ""; ?>" id="myFinancesSubmenu">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="../balances/" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Balances") ?>"><i class="bi bi-caret-right<?= fillIcon($pageTitle, "Balances") ?>"></i> Balances</a></li>
-              <li><a href="../payments" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Payments") ?>"><i class="bi bi-caret-right<?= fillIcon($pageTitle, "Payments") ?>"></i> Payments</a></li>
+                <li><a href="../balances/" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Balances") ?>" <?= isAriaCurrentPage($pageTitle, "Balances") ?>><i class="bi bi-caret-right<?= fillIcon($pageTitle, "Balances") ?>"></i> Balances</a></li>
+              <li><a href="../payments" class="nav-link d-flex align-items-center gap-2 <?= isActiveSidebarPage($pageTitle, "Payments") ?>" <?= isAriaCurrentPage($pageTitle, "Payments") ?>><i class="bi bi-caret-right<?= fillIcon($pageTitle, "Payments") ?>"></i> Payments</a></li>
             </ul>
           </div>
         </li>
