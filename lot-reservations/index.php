@@ -1,7 +1,10 @@
 <?php 
   session_start();
-  require_once "../utils/helpers.php";
+  require_once "../utils/autoload.php";
+  autoloadUtils(__DIR__ . "/../utils");
+
   require_once "../content/lot-reservations.php";
+
 
   if (!isset($_SESSION["customer_id"])) {
     serverRedirect("../");
@@ -20,9 +23,8 @@
   function displayNewReservationsTable($newReservationsTable) {
     foreach ($newReservationsTable as $newReservationsRow) {
       startRow();
-      rowData($newReservationsRow["created_at"]);
-      rowData($newReservationsRow["formatted_reserved_lot"]);
-      rowDataBadge("primary", $newReservationsRow["lot_type"]);
+      rowData("", $newReservationsRow["created_at"]);
+      rowData("", $newReservationsRow["formatted_reserved_lot"]);
 
       if ($newReservationsRow["lot_type"] == "Pending") $lotTypeColor = "info"; else $lotTypeColor = "primary";
       rowDataBadge($lotTypeColor, $newReservationsRow["lot_type"]);
@@ -52,11 +54,11 @@
           break;
       }
       rowDataBadge($reservationStatusColor, $newReservationsRow["reservation_status"]);
-      // rowData($pendingReservationsRow["lot_type"]);
-      // rowData($pendingReservationsRow["payment_option"]);
-      // rowData($pendingReservationsRow["reservation_status"]);
+      // rowData("", $pendingReservationsRow["lot_type"]);
+      // rowData("", $pendingReservationsRow["payment_option"]);
+      // rowData("", $pendingReservationsRow["reservation_status"]);
       endRow();
-    }
+    }  
   }
 
   function displayCashSaleReservationsTableHead() {
@@ -66,17 +68,22 @@
     tableHead("Lot Type");
     tableHead("Total Purchase Price");
     tableHead("Total Balance");
+    tableHead("Reservation Status");
+    tableHead("Action");
     endRow();
   }
 
   function displayCashSaleReservationsTable($cashSaleReservationsTable) {
     foreach ($cashSaleReservationsTable as $cashSaleReservationsRow) {
       startRow();
-      rowData($cashSaleReservationsRow["created_at"]);
-      rowData($cashSaleReservationsRow["formatted_reserved_lot"]);
+      rowData("", $cashSaleReservationsRow["created_at"]);
+      rowData("", $cashSaleReservationsRow["formatted_reserved_lot"]);
       rowDataBadge("primary", $cashSaleReservationsRow["lot_type"]);
-      rowData($cashSaleReservationsRow["total_purchase_price"]);
-      rowData($cashSaleReservationsRow["total_balance"]);
+      rowData("text-success", $cashSaleReservationsRow["total_purchase_price"]);
+      rowData("text-success", $cashSaleReservationsRow["total_balance"]);
+      rowDataBadge("success", $cashSaleReservationsRow["reservation_status"]);
+
+      rowLink("btn-primary", '<i class="bi bi-wallet-fill"></i>', "Pay", $cashSaleReservationsRow["payment_link"], "_blank");
       endRow();
     }
   }
@@ -88,17 +95,19 @@
     tableHead("Lot Type");
     tableHead("Total Purchase Price");
     tableHead("Total Balance");
+    tableHead("Reservation Status");
     endRow();
   }
 
   function displaySixMonthsReservationsTable($sixMonthsReservationsTable) {
     foreach ($sixMonthsReservationsTable as $sixMonthsReservationsRow) {
       startRow();
-      rowData($sixMonthsReservationsRow["created_at"]);
-      rowData($sixMonthsReservationsRow["formatted_reserved_lot"]);
+      rowData("", $sixMonthsReservationsRow["created_at"]);
+      rowData("", $sixMonthsReservationsRow["formatted_reserved_lot"]);
       rowDataBadge("primary", $sixMonthsReservationsRow["lot_type"]);
-      rowData($sixMonthsReservationsRow["total_purchase_price"]);
-      rowData($sixMonthsReservationsRow["total_balance"]);
+      rowData("text-success", $sixMonthsReservationsRow["total_purchase_price"]);
+      rowData("text-success", $sixMonthsReservationsRow["total_balance"]);
+      rowDataBadge("success", $sixMonthsReservationsRow["reservation_status"]);
       endRow();
     }
   }
@@ -112,22 +121,26 @@
     tableHead("Total Balance");
     tableHead("Down Payment");
     tableHead("Monthly Payment");
+    tableHead("Reservation Status");
     endRow();
   }
 
   function displayInstallmentReservationsTable($installmentReservationsTable) {
     foreach ($installmentReservationsTable as $installmentReservationsRow) {
       startRow();
-      rowData($installmentReservationsRow["created_at"]);
-      rowData($installmentReservationsRow["formatted_reserved_lot"]);
+      rowData("", $installmentReservationsRow["created_at"]);
+      rowData("", $installmentReservationsRow["formatted_reserved_lot"]);
       rowDataBadge("primary", $installmentReservationsRow["lot_type"]);
-      rowData($installmentReservationsRow["total_purchase_price"]);
-      rowData($installmentReservationsRow["total_balance"]);
-      rowData($installmentReservationsRow["down_payment"]);
-      rowData($installmentReservationsRow["monthly_payment"]);
+      rowData("text-success", $installmentReservationsRow["total_purchase_price"]);
+      rowData("text-success", $installmentReservationsRow["total_balance"]);
+      rowData("text-success", $installmentReservationsRow["down_payment"]);
+      rowData("text-success", $installmentReservationsRow["monthly_payment"]);
+      rowDataBadge("success", $installmentReservationsRow["reservation_status"]);
       endRow();
     }
   }
+
+  
 ?>
 
 <!doctype html>
@@ -170,11 +183,11 @@
               <a href="?type=cash-sale" class="btn btn-primary <?= isActivePageLink("cash-sale") ?>" <?= isAriaCurrentPageLink("cash-sale") ?>>Cash Sale</a>
               <a href="?type=six-months" class="btn btn-primary <?= isActivePageLink("six-months") ?>" <?= isAriaCurrentPageLink("six-months") ?>>6 Months</a>
               <a href="?type=installment" class="btn btn-primary <?= isActivePageLink("installment") ?>" <?= isAriaCurrentPageLink("installment") ?>>Installment</a>
-              <a href="?type=cancelled" class="btn btn-primary <?= isActivePageLink("cancelled") ?>" <?= isAriaCurrentPageLink("cancelled") ?>>Cancelled</a>
+              <a href="?type=cancelled" class="btn btn-primary <?= isActivePageLink("cancelled") ?>" <?= isAriaCurrentPageLink("cancelled") ?>>Canceled</a>
             </div>
           </div>
 
-          <div class="d-flex justify-content-end">
+          <div class="d-flex justify-content-start">
             <a href="../reservation-lot" class="btn"><i class="bi bi-plus-circle-fill"></i> Reserve a new lot</a>
           </div>
 

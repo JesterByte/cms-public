@@ -1,5 +1,10 @@
 <?php
+require_once "../vendor/autoload.php";
+
 define("SECRET_KEY", "123");
+define("PAYMONGO_PUBLIC_KEY", "pk_test_qSGhBShGA4DgxfErQ6k7iSQS");
+define("PAYMONGO_SECRET_KEY", "sk_test_ZTA2SopEKfLJHZPZ7Tc4XKCK");
+define("PAYMONGO_WEBHOOK_SECRET_KEY", "whsk_3Cx2A2jnNDTZmgZ23fRAR4Wr");
 
 // Encrypt function
 function encrypt($data, $key) { // encrypt() requires a timestamp
@@ -94,8 +99,8 @@ function startRow() {
     echo "<tr>";
 }
   
-function rowData($rowData) {
-  echo "<td>" . escapeOutput($rowData) . "</td>";
+function rowData($textColor = "", $rowData) {
+  echo "<td class='" . $textColor . "'>" . escapeOutput($rowData) . "</td>";
 }
 
 function rowButtonTriggerModal($color = "", $modalId = "", $buttonIcon = "", $buttonText = "") {
@@ -106,8 +111,8 @@ function rowButton($color = "", $icon = "", $textContent) {
     echo '<td><button type="button" class="btn ' . $color . '">' . $icon  . ' ' . escapeOutput($textContent) . '</button></td>';
 }
 
-function rowLink($color = "", $icon = "", $textContent, $link = "#") {
-  echo '<td><a class="btn ' . $color . '" href="' . $link . '">' . $icon  . ' ' . escapeOutput($textContent) . '</a></td>';
+function rowLink($color = "", $icon = "", $textContent, $link = "#", $target = "") {
+  echo '<td><a class="btn ' . $color . '" href="' . $link . '" target="' . $target . '">' . $icon  . ' ' . escapeOutput($textContent) . '</a></td>';
 }
 
 function rowDataBadge($color, $rowData) {

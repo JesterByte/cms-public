@@ -1,11 +1,67 @@
 <?php
+require_once "../vendor/autoload.php";
 require_once "../config/database.php";
-require_once "../utils/helpers.php";
 
 $newReservationsTable = selectNewReservations($connection, $_SESSION["customer_id"]);
 $cashSaleReservationsTable = selectCashSaleReservations($connection, $_SESSION["customer_id"]);
 $sixMonthsReservationsTable = selectSixMonthsReservations($connection, $_SESSION["customer_id"]);
 $installmentReservationsTable = selectInstallmentReservations($connection, $_SESSION["customer_id"]);
+
+function generatePayMongoLink($connection, $reservationId, $reservedLot, $amount) {
+    // Initialize Guzzle HTTP client
+    $client = new \GuzzleHttp\Client();
+  
+    // Prepare data for payment link
+    $data = [
+        'data' => [
+            'attributes' => [
+                'amount' => $amount * 100,  // PayMongo expects the amount in centavos
+                'description' => "Payment for " . $reservedLot,
+                'remarks' => "Payment for lot reservation",
+                'redirect' => [
+                    'success' => "https://dwkj073hhgz8.share.zrok.io/cms-public/process/process-check-payment-status.php",
+                    'failure' => "https://dwkj073hhgz8.share.zrok.io/cms-public/process/process-check-payment-status.php"
+                ]
+                
+            ]
+        ]
+    ];
+  
+    // Make request to PayMongo to generate the payment link
+    $response = $client->request('POST', 'https://api.paymongo.com/v1/links', [
+        'json' => $data,
+        'headers' => [
+            'accept' => 'application/json',
+            'authorization' => 'Basic ' . base64_encode(PAYMONGO_SECRET_KEY . ':'),
+            'content-type' => 'application/json',
+        ],
+    ]);
+  
+    // Handle response and get the payment link
+    $responseBody = json_decode($response->getBody(), true);
+  
+    // Check if the link was created successfully and retrieve the checkout URL
+  if (isset($responseBody['data']['attributes']['checkout_url'])) {
+    $referenceNumber = $responseBody["data"]["attributes"]["reference_number"];
+
+    $_SESSION["active_payment_reference_number"] = $referenceNumber;
+    
+    $updateReferenceNumber = mysqli_prepare($connection, "UPDATE payment_terms SET reference_number = ? WHERE reservation_id = ?");
+    mysqli_stmt_bind_param($updateReferenceNumber, "si", $referenceNumber, $reservationId);
+    if (!mysqli_stmt_execute($updateReferenceNumber)) {
+      echo "Database error";
+    }
+  
+    $checkoutUrl = $responseBody['data']['attributes']['checkout_url'];
+    // echo "Payment Link Created: <a href='$checkoutUrl' target='_blank'>Click here to pay</a>";
+  } else {
+    echo "Error creating payment link.";
+  }
+    // $checkoutUrl = $responseBody['data']['attributes']['checkout_url'];
+  
+    return $checkoutUrl;
+}
+  
 
 function selectNewReservations($connection, $reserveeId) {
     $newReservationsTable = [];
@@ -15,15 +71,15 @@ function selectNewReservations($connection, $reserveeId) {
     if (mysqli_stmt_execute($selectNewReservations)) {
         $selectNewReservationsResult = mysqli_stmt_get_result($selectNewReservations);
         if (mysqli_num_rows($selectNewReservationsResult) > 0) {
-            while ($myReservationRow = mysqli_fetch_assoc($selectNewReservationsResult)) {
-                $myReservationRow["formatted_reserved_lot"] = displayPhaseLocation($myReservationRow["reserved_lot"]); 
-                $myReservationRow["created_at"] = displayDateTime($myReservationRow["created_at"]);
-                $myReservationRow["total_purchase_price"] = formatToPeso($myReservationRow["total_purchase_price"]);
-                $myReservationRow["total_balance"] = formatToPeso($myReservationRow["total_balance"]);
-                $myReservationRow["down_payment"] = $myReservationRow["down_payment"] != null ? formatToPeso($myReservationRow["down_payment"]) : "N/A";
-                $myReservationRow["monthly_payment"] = $myReservationRow["monthly_payment"] != null ? formatToPeso($myReservationRow["monthly_payment"]) : "N/A";
-                $myReservationRow["payment_options_url"] = encrypt("reservation_id=" . $myReservationRow["id"] . "&timestamp=" . time(), SECRET_KEY);
-                $newReservationsTable[] = array_map("escapeOutput", $myReservationRow);
+            while ($newReservationRow = mysqli_fetch_assoc($selectNewReservationsResult)) {
+                $newReservationRow["formatted_reserved_lot"] = displayPhaseLocation($newReservationRow["reserved_lot"]); 
+                $newReservationRow["created_at"] = displayDateTime($newReservationRow["created_at"]);
+                $newReservationRow["total_purchase_price"] = formatToPeso($newReservationRow["total_purchase_price"]);
+                $newReservationRow["total_balance"] = formatToPeso($newReservationRow["total_balance"]);
+                $newReservationRow["down_payment"] = $newReservationRow["down_payment"] != null ? formatToPeso($newReservationRow["down_payment"]) : "N/A";
+                $newReservationRow["monthly_payment"] = $newReservationRow["monthly_payment"] != null ? formatToPeso($newReservationRow["monthly_payment"]) : "N/A";
+                $newReservationRow["payment_options_url"] = encrypt("reservation_id=" . $newReservationRow["id"] . "&timestamp=" . time(), SECRET_KEY);
+                $newReservationsTable[] = array_map("escapeOutput", $newReservationRow);
             }
         }
     }
@@ -44,8 +100,11 @@ function selectCashSaleReservations($connection, $reserveeId) {
                 $cashSaleReservationRow["formatted_reserved_lot"] = displayPhaseLocation($cashSaleReservationRow["reserved_lot"]);
                 $cashSaleReservationRow["created_at"] = displayDateTime($cashSaleReservationRow["created_at"]);
                 $cashSaleReservationRow["total_purchase_price"] = formatToPeso($cashSaleReservationRow["total_purchase_price"]);
-                $cashSaleReservationRow["total_balance"] = formatToPeso($cashSaleReservationRow["total_balance"]);    
-                $cashSaleReservationsTable[] = array_map("escapeOutput", $cashSaleReservationRow);            
+                $cashSaleReservationRow["amount_to_pay"] = $cashSaleReservationRow["total_balance"];
+                $cashSaleReservationRow["total_balance"] = formatToPeso($cashSaleReservationRow["total_balance"]);
+                $cashSaleReservationRow["payment_link"] = generatePayMongoLink($connection, $cashSaleReservationRow["id"], $cashSaleReservationRow["formatted_reserved_lot"], $cashSaleReservationRow["amount_to_pay"]);
+    
+                $cashSaleReservationsTable[] = array_map("escapeOutput", $cashSaleReservationRow);     
             }
         }
     }

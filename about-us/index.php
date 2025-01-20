@@ -19,7 +19,7 @@
     <main class="container mt-5">
         <h1 class="text-center mb-4">About Us</h1>
         
-        <section id="history" class="mb-5 text-bg-secondary p-4 rounded shadow-sm">
+        <section id="history" class="mb-5 text-bg-success p-4 rounded shadow-sm">
             <h2>Our History</h2>
             <p>Green Haven Memorial Park was established in [Year] with the mission to provide a serene and respectful resting place for loved ones. Over the years, we have grown to become a trusted name in the community, known for our compassionate services and beautiful grounds.</p>
         </section>

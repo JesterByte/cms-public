@@ -33,7 +33,7 @@ function updatePaymentOption($connection, $reservationId, $paymentOption) {
         echo "Database error";
     }
 
-    $paymentOptionColumns = ["Cash Sale: 10% Discount" => "cash_sale_10_discount", "6 Months: 5% Discount" => "6_months_5_discount", "Installment: 1 Year" => "monthly_amortization_1yr", "Installment: 2 Years" => "monthly_amortization_2yrs_10_interest", "Installment: 3 Years" => "monthly_amortization_3yrs_15_interest", "Installment: 4 Years" => "monthly_amortization_4yrs_20_interest", "Installment: 5 Years" => "monthly_amortization_5yrs_25_interest"];
+    // $paymentOptionColumns = ["Cash Sale: 10% Discount" => "cash_sale_10_discount", "6 Months: 5% Discount" => "6_months_5_discount", "Installment: 1 Year" => "monthly_amortization_1yr", "Installment: 2 Years" => "monthly_amortization_2yrs_10_interest", "Installment: 3 Years" => "monthly_amortization_3yrs_15_interest", "Installment: 4 Years" => "monthly_amortization_4yrs_20_interest", "Installment: 5 Years" => "monthly_amortization_5yrs_25_interest"];
     $phaseNumber = "Phase " . extractPhaseNumber($reservationRow["reserved_lot"]);
     $selectPricing = mysqli_prepare($connection, "SELECT * FROM phase_price_list WHERE phase = ? AND lot_type = ?");
     mysqli_stmt_bind_param($selectPricing, "ss", $phaseNumber, $reservationRow["lot_type"]);
@@ -88,9 +88,47 @@ function updatePaymentOption($connection, $reservationId, $paymentOption) {
     }
 
     if (mysqli_stmt_execute($updatePaymentOption)) {
+        if ($paymentOption == "Cash Sale: 10% Discount") {
+            cashSalePaymentTerm($connection, $reservationId, $paymentOption, $pricingRow["cash_sale_10_discount"]);
+        }
+
         $_SESSION["payment_option_updated"] = true;
         serverRedirect("../lot-reservations/?type=new");
     } else {
         echo "Database error";
     }
 }
+
+function cashSalePaymentTerm($connection, $reservationId, $paymentOption, $amountDue) {
+    $currentDate = new DateTime();
+    $currentDate->modify("+14 days");
+    $dueDate = $currentDate->format("Y-m-d");
+
+    $insertNewPaymentTerm = mysqli_prepare($connection, "INSERT INTO payment_terms(reservation_id, payment_option, due_date, amount_due) VALUES(?,?,?,?)");
+    mysqli_stmt_bind_param($insertNewPaymentTerm, "issd", $reservationId, $paymentOption, $dueDate, $amountDue);
+    if (!mysqli_stmt_execute($insertNewPaymentTerm)) {
+        echo "Database error";
+    }
+}
+
+// function sixMonthsPaymentTerm($connection, $reservationId, $paymentOption, $amountDue) {
+//     $startDate = new DateTime();
+//     $interval = new DateInterval("P1M");
+
+//     $dueDates = [];
+//     for ($i = 1; $i <= 6; $i++) {
+//         $dueDate = clone $startDate;
+//         $dueDate->add($interval);
+//         $dueDates[] = $dueDate->format("Y-m-d");
+
+//         $startDate = $dueDate;
+//     }
+
+//     $insertNewPaymentTerm = mysqli_prepare($connection, "INSERT INTO payment_terms(reservation_idd, payment_option, due_date, amount_due) VALUES(?,?,?,?)");
+//     foreach ($dueDates as $dueDate) {
+//         mysqli_stmt_bind_param($insertNewPaymentTerm, "issd", $reservationId, $paymentOption, $dueDate, $amountDue);
+//         if (!mysqli_stmt_execute($insertNewPaymentTerm)) {
+//             echo "Database error";
+//         }
+//     }
+// }

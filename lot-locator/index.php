@@ -47,8 +47,8 @@
     
     <main>
         <div class="container mt-5">
-          <h1 class="display-4 text-center mb-4">Plot Locator</h1>
-          <p class="lead text-center mb-5">Check the status of available plots and locate your loved one's lot with ease.</p>            
+          <h1 class="display-4 text-center mb-4">Lot Locator</h1>
+          <p class="lead text-center mb-5">Check the status of available lots and locate your loved one's lot with ease.</p>            
           <div class="rounded shadow mb-4" id="map"></div>
         </div>
     </main>

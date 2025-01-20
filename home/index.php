@@ -82,8 +82,8 @@
                                 <div class="mb-3">
                                     <i class="bi bi-map-fill text-warning fs-1"></i>
                                 </div>
-                                <h5 class="card-title">Plot Reservations</h5>
-                                <p class="card-text">Reserve a plot for future needs.</p>
+                                <h5 class="card-title">Lot Reservations</h5>
+                                <p class="card-text">Reserve a lot for future needs.</p>
                             </div>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                                 <div class="mb-3">
                                     <i class="bi bi-search text-info fs-1"></i>
                                 </div>
-                                <h5 class="card-title">Search Plot Availability</h5>
+                                <h5 class="card-title">Search Lot Availability</h5>
                                 <p class="card-text">Find available lots easily with our online search tool.</p>
                             </div>
                         </div>

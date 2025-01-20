@@ -10,7 +10,7 @@
           <a class="nav-link <?= isActivePage($pageTitle, "Home") ?>" <?= isAriaCurrentPage($pageTitle, "Home") ?> href="../home/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <?= isActivePage($pageTitle, "Plot Locator") ?>" <?= isAriaCurrentPage($pageTitle, "Plot Locator") ?> href="../plot-locator/">Plot Locator</a>
+          <a class="nav-link <?= isActivePage($pageTitle, "Lot Locator") ?>" <?= isAriaCurrentPage($pageTitle, "Lot Locator") ?> href="../lot-locator/">Lot Locator</a>
         </li>
         <li class="nav-item">
           <a class="nav-link <?= isActivePage($pageTitle, "About Us") ?>" <?= isAriaCurrentPage($pageTitle, "About Us") ?> href="../about-us/">About Us</a>
